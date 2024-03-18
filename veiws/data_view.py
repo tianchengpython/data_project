@@ -85,7 +85,9 @@ class DataView(DataTiramisu):
         joint_list = []
         try:
             for i in input_data:
-                select_sql = f"SELECT id,data_txt FROM data_text WHERE data_txt LIKE '%{i}%'"
+                select_sql = (f"SELECT id,data_txt,(LENGTH(data_txt) - LENGTH(REPLACE(data_txt, '{i}', ''))) / LENGTH('{i}') "
+                f"AS occurrences FROM data_text WHERE data_txt LIKE CONCAT('%', '{i}', '%') ORDER BY occurrences DESC LIMIT 1;")
+
                 resp_data = select_data(select_sql)
                 # print(">>>>>",resp_data)
                 if len(resp_data) > 1:
