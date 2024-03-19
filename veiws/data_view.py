@@ -66,13 +66,13 @@ class DataView(DataTiramisu):
         input_txt_path = input("》》》》》》请输入读取文件路径：")
         input_book_name = input("》》》》》》请输入书本名称：")
         #         进行读取文本中的数据;
-        resp_txt = self.get_data_txt(input_txt_path).split("。")
+        resp_txt = self.get_data_txt(input_txt_path)
 
         # 思路：1.分割完后进行存入数据库
-        for i in resp_txt:
-            if i != "":
-                insert_sql = f"INSERT INTO data_text (data_txt,book_name) VALUES ('{i}','{input_book_name}')"
-                insert_data(insert_sql)
+        # for i in resp_txt:
+        #     if i != "":
+        #         insert_sql = f"INSERT INTO data_text (data_txt,book_name) VALUES ('{i}','{input_book_name}')"
+        #         insert_data(insert_sql)
 
     # 读取转换为json数据集：
     def get_save_json(self):
@@ -89,7 +89,6 @@ class DataView(DataTiramisu):
                 f"AS occurrences FROM data_text WHERE data_txt LIKE CONCAT('%', '{i}', '%') ORDER BY occurrences DESC LIMIT 1;")
 
                 resp_data = select_data(select_sql)
-                # print(">>>>>",resp_data)
                 if len(resp_data) > 1:
                 #     添加到json数据中
                     data_pal = {
@@ -107,7 +106,6 @@ class DataView(DataTiramisu):
                     }
                     joint_list.append(data_pal)
 
-            # print(joint_list)
 
             # 如果没有文件就创建文件：如果有文件就进行合并数据：
             if os.path.exists("../save_json/data_pal.json"):
@@ -148,8 +146,7 @@ if __name__ == '__main__':
         dat.get_save_json()
 
 
-# 1.下午2点跟胡耘硕对接一下数据集上线整体流程
-# 4.进行更准确的完成查询
+
 
 
 

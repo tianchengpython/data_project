@@ -7,6 +7,7 @@ import os
 import time
 import docx
 import random
+import re
 
 # 支持word,txt,pdf,提取文字的封装:
 class DataTiramisu():
@@ -41,9 +42,18 @@ class DataTiramisu():
                 dat_list = os.listdir(read_file_word)
                 for i in dat_list:
                     doc = docx.Document(f"{read_file_word}{i}")
+
                     for j in doc.paragraphs:
+                        sentences = re.split(r'(?<=。)', j.text)
                         with open(save_file_word,'a+',encoding='utf-8') as file:
-                            file.write(j.text)
+                            for sentence in sentences:
+                                # 去除句子两端的空白字符
+                                clean_sentence = sentence.strip()
+                                # 过滤掉除句号之外的其他换行符
+                                clean_sentence = re.sub(r'[\r\n]+(?<!。)', '', clean_sentence)
+                                # 如果句子不为空，则写入文件
+                                if clean_sentence:
+                                    file.write(clean_sentence + '\n')
 
             else:
                 # 获取所有数据跑的相当快，根据段落进行获取数据就没有必要，留一个接口以防后续使用：
@@ -53,7 +63,15 @@ class DataTiramisu():
                 data_list = [i for i in doc.paragraphs][int(start_num):int(end_num)]
                 for i in data_list:
                     with open(f"{save_file_word}",'a+',encoding='utf-8') as file:
-                        file.write(i.text)
+                        sentences = re.split(r'(?<=。)', i.text)
+                        for sentence in sentences:
+                            # 去除句子两端的空白字符
+                            clean_sentence = sentence.strip()
+                            # 过滤掉除句号之外的其他换行符
+                            clean_sentence = re.sub(r'[\r\n]+(?<!。)', '', clean_sentence)
+                            # 如果句子不为空，则写入文件
+                            if clean_sentence:
+                                file.write(clean_sentence + '\n')
 
 
             # 记录程序结束时间
@@ -140,7 +158,16 @@ class DataTiramisu():
                 text = pytesseract.image_to_string(image, lang=supported_languages[0])
 
                 with open(f"{save_txt_path}",'a+',encoding='utf-8') as file:
-                    file.write(text)
+                    # file.write(text)
+                    sentences = re.split(r'(?<=。)', text)
+                    for sentence in sentences:
+                        # 去除句子两端的空白字符
+                        clean_sentence = sentence.strip()
+                        # 过滤掉除句号之外的其他换行符
+                        clean_sentence = re.sub(r'[\r\n]+(?<!。)', '', clean_sentence)
+                        # 如果句子不为空，则写入文件
+                        if clean_sentence:
+                            file.write(clean_sentence + '\n')
 
             print(">>>>>>提取pdf数据完成\n\n")
 
