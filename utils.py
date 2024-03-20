@@ -209,14 +209,14 @@ if __name__ == '__main__':
 
 
 #     提取word中的数据：
-    dat_dict = {
-        "read_file_word":"./data_files/word/插花与花艺设计（第三版）.docx",   #读取文件路径
-        "save_file_word":"./txts/save_word_txt/1_word.txt", #存放word提取出来的数据
-        "start_num":0, #单个word使用：开始
-        "end_num":30,#单个word使用：结束
-        "if_all":False #True读取文件夹中所有数据，False读取单个
-    }
-    dat.post_word_txt(dat_dict)
+    # dat_dict = {
+    #     "read_file_word":"./data_files/word/插花与花艺设计（第三版）.docx",   #读取文件路径
+    #     "save_file_word":"./txts/save_word_txt/1_word.txt", #存放word提取出来的数据
+    #     "start_num":0, #单个word使用：开始
+    #     "end_num":30,#单个word使用：结束
+    #     "if_all":False #True读取文件夹中所有数据，False读取单个
+    # }
+    # dat.post_word_txt(dat_dict)
 
 
     # 读取文本：

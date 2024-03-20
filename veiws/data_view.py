@@ -61,72 +61,96 @@ class DataView(DataTiramisu):
         self.post_word_txt(dat_dict)
 
     # 添加到数据库中
-    def get_dat(self):
-        print(">>>>>开始整理数据集:")
-        input_txt_path = input("》》》》》》请输入读取文件路径：")
-        input_book_name = input("》》》》》》请输入书本名称：")
-        #         进行读取文本中的数据;
-        resp_txt = self.get_data_txt(input_txt_path)
-
-        # 思路：1.分割完后进行存入数据库
-        # for i in resp_txt:
-        #     if i != "":
-        #         insert_sql = f"INSERT INTO data_text (data_txt,book_name) VALUES ('{i}','{input_book_name}')"
-        #         insert_data(insert_sql)
+    # def get_dat(self):
+    #     print(">>>>>开始整理数据集:")
+    #     input_txt_path = input("》》》》》》请输入读取文件路径：")
+    #     input_book_name = input("》》》》》》请输入书本名称：")
+    #     #         进行读取文本中的数据;
+    #     resp_txt = self.get_data_txt(input_txt_path)
+    #
+    #     # 思路：1.分割完后进行存入数据库
+    #     for i in resp_txt:
+    #         if i != "":
+    #             insert_sql = f"INSERT INTO data_text (data_txt,book_name) VALUES ('{i}','{input_book_name}')"
+    #             insert_data(insert_sql)
 
     # 读取转换为json数据集：
-    def get_save_json(self):
+    # def get_save_json(self):
+    #
+    #     input_data = input("》》》》》》请输入关键字：").split(" ")
+    #     # 2.将读出来的数据存入数据库，根据输入的关键字从数据库中模糊查询一下，查询相关语句
+    #
+    #     # print(">>>>>",input_data)
+    #
+    #     joint_list = []
+    #     try:
+    #         for i in input_data:
+    #             select_sql = (f"SELECT id,data_txt,(LENGTH(data_txt) - LENGTH(REPLACE(data_txt, '{i}', ''))) / LENGTH('{i}') "
+    #             f"AS occurrences FROM data_text WHERE data_txt LIKE CONCAT('%', '{i}', '%') ORDER BY occurrences DESC LIMIT 1;")
+    #
+    #             resp_data = select_data(select_sql)
+    #             if len(resp_data) > 1:
+    #             #     添加到json数据中
+    #                 data_pal = {
+    #                     "instruction": i,
+    #                     "input": "",
+    #                     # 获取从数据库读出来的[('id','data_txt')]这种格式的数据
+    #                     "output": resp_data[0][1]
+    #                 }
+    #                 joint_list.append(data_pal)
+    #             else:
+    #                 data_pal = {
+    #                     "instruction": i,
+    #                     "input": "",
+    #                     "output": resp_data[0][1]
+    #                 }
+    #                 joint_list.append(data_pal)
+    #
+    #
+    #         # 如果没有文件就创建文件：如果有文件就进行合并数据：
+    #         if os.path.exists("../save_json/data_pal.json"):
+    #             # 1.先将原本的json数据读出来
+    #             with open("../save_json/data_pal.json", "r",encoding="utf-8") as f:
+    #                 file_data = f.read()
+    #                 file_data = eval(file_data)
+    #                 # 将读取出来的数据跟当前获取出来相关的数据合并
+    #                 for j in joint_list:
+    #                     file_data.append(j)
+    #                 with open("../save_json/data_pal.json", "w",encoding="utf-8") as file:
+    #                     json.dump(file_data, file, ensure_ascii=False, indent=4)
+    #         else:
+    #             with open("../save_json/data_pal.json", "w", encoding="utf-8") as file:
+    #                 json.dump(joint_list, file, ensure_ascii=False, indent=4)
+    #
+    #
+    #         print(">>>>>>转换数据集完成")
+    #
+    #     except Exception as e:
+    #         print(">>>>>>模糊查询异常！",e)
 
-        input_data = input("》》》》》》请输入关键字：").split(" ")
-        # 2.将读出来的数据存入数据库，根据输入的关键字从数据库中模糊查询一下，查询相关语句
+    # 将文本中的每一行数据添加到列表中用于进行整理JSON数据使用：
+    def transition(self):
+        transition_list = []
 
-        # print(">>>>>",input_data)
+    #     读取txt文件：
+        read_path= "../txts/save_json/问题1.txt"
+        save_path= "../txts/save_json/问题1.json"
+        pal = {
+            "text": transition_list
+        }
+        with open(read_path,'r',encoding='utf-8') as f:
+            for i in f.readlines():
+                transition_list.append(i.strip())
 
-        joint_list = []
-        try:
-            for i in input_data:
-                select_sql = (f"SELECT id,data_txt,(LENGTH(data_txt) - LENGTH(REPLACE(data_txt, '{i}', ''))) / LENGTH('{i}') "
-                f"AS occurrences FROM data_text WHERE data_txt LIKE CONCAT('%', '{i}', '%') ORDER BY occurrences DESC LIMIT 1;")
+    #     转换为JSON提问格式数据：
+        if not os.path.exists(save_path):
+    #             存入Json文件中
+            with open(save_path,'w',encoding='utf-8') as file:
+                json.dump(pal,file,ensure_ascii=False,indent=4)
+        else:
+            with open(save_path,'a',encoding='utf-8') as file:
+                json.dump(pal,file,ensure_ascii=False,indent=4)
 
-                resp_data = select_data(select_sql)
-                if len(resp_data) > 1:
-                #     添加到json数据中
-                    data_pal = {
-                        "instruction": i,
-                        "input": "",
-                        # 获取从数据库读出来的[('id','data_txt')]这种格式的数据
-                        "output": resp_data[0][1]
-                    }
-                    joint_list.append(data_pal)
-                else:
-                    data_pal = {
-                        "instruction": i,
-                        "input": "",
-                        "output": resp_data[0][1]
-                    }
-                    joint_list.append(data_pal)
-
-
-            # 如果没有文件就创建文件：如果有文件就进行合并数据：
-            if os.path.exists("../save_json/data_pal.json"):
-                # 1.先将原本的json数据读出来
-                with open("../save_json/data_pal.json", "r",encoding="utf-8") as f:
-                    file_data = f.read()
-                    file_data = eval(file_data)
-                    # 将读取出来的数据跟当前获取出来相关的数据合并
-                    for j in joint_list:
-                        file_data.append(j)
-                    with open("../save_json/data_pal.json", "w",encoding="utf-8") as file:
-                        json.dump(file_data, file, ensure_ascii=False, indent=4)
-            else:
-                with open("../save_json/data_pal.json", "w", encoding="utf-8") as file:
-                    json.dump(joint_list, file, ensure_ascii=False, indent=4)
-
-
-            print(">>>>>>转换数据集完成")
-
-        except Exception as e:
-            print(">>>>>>模糊查询异常！",e)
 
 
 
@@ -134,16 +158,32 @@ if __name__ == '__main__':
     dat = DataView()
 
     # 提取pdf中的数据：
-    procedure = input(">>>>>>请输入程序选项：\n1提取pdf中书本数据:\n2提取word中书本数据：\n3将提取的数据添加至数据库：\n4将数据转换为JSON格式：")
+    procedure = input(">>>>>>请输入程序选项：\n1提取pdf中书本数据:\n2提取word中书本数据：\n3读取要提问的问题：")
 
     if procedure == "1":
         dat.get_pdf_data()
     elif procedure == "2":
         dat.get_world_data()
     elif procedure == "3":
-        dat.get_dat()
-    elif procedure == "4":
-        dat.get_save_json()
+        dat.transition()
+
+
+
+    # elif procedure == "3":
+    #     dat.get_dat()
+    # elif procedure == "4":
+    #     dat.get_save_json()
+
+
+
+
+
+# 下午向正式数据库中跑一本书的数据，整理出JSON数据集
+
+
+
+
+
 
 
 
