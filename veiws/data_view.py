@@ -7,11 +7,6 @@ from models.db_model import insert_data,select_data
 
 
 class DataView(DataTiramisu):
-
-    # def __init__(self):
-    #     super.__init__()
-
-
     # 提取pdf中的数据：
     def get_pdf_data(self):
         read_file_pdf = input("》》》》》》请输入读取文件路径：").strip()
@@ -20,12 +15,7 @@ class DataView(DataTiramisu):
         save_txt_path = input("》》》》》》请输入存放提取后的文本存放地址：")
         start_num = input("》》》》》》请输入单个pdf使用，开始索引：")
         end_num = input("》》》》》》请输入单个pdf使用，结束索引：")
-        if_all = input("》》》》》》请输入True读取文件夹中所有数据，False读取单个：")
-
-
-        # "../data_files/pdf/"
-        # "../static/"
-        # "../txts/save_pdf_txt/"
+        if_all = input("》》》》》》请输入True读取文件夹中所有数据")
 
         data_dict = {
             "read_file_pdf": read_file_pdf,          # 读取文件路径
@@ -37,8 +27,6 @@ class DataView(DataTiramisu):
             "if_all": if_all                         # True读取文件夹中所有数据，False读取单个
         }
 
-        # print(">>>>>>>",data_dict)
-
         self.post_pdf_txt(data_dict)
 
 
@@ -47,15 +35,11 @@ class DataView(DataTiramisu):
 
         read_file_word = input("》》》》》》请输入读取文件路径：")
         save_file_word = input("》》》》》》请输入存放word提取出来的数据：")
-        start_num = input("》》》》》》请输入单个word使用,开始索引：")
-        end_num = input("》》》》》》请输入单个word使用,结束索引：")
         if_all = input("》》》》》》请输入True读取文件夹中所有数据，False读取单个：")
 
         dat_dict = {
                 "read_file_word": read_file_word,     #读取文件路径
                 "save_file_word": save_file_word,     #存放word提取出来的数据
-                "start_num": start_num,               #单个word使用：开始
-                "end_num": end_num,                   #单个word使用：结束
                 "if_all": if_all                      #True读取文件夹中所有数据，False读取单个
             }
         self.post_word_txt(dat_dict)
@@ -153,7 +137,6 @@ class DataView(DataTiramisu):
 
 
 
-
 if __name__ == '__main__':
     dat = DataView()
 
@@ -166,43 +149,5 @@ if __name__ == '__main__':
         dat.get_world_data()
     elif procedure == "3":
         dat.transition()
-
-
-
-    # elif procedure == "3":
-    #     dat.get_dat()
-    # elif procedure == "4":
-    #     dat.get_save_json()
-
-
-
-
-
-# 下午向正式数据库中跑一本书的数据，整理出JSON数据集
-
-
-
-
-
-
-
-
-
-
-
-
-# if __name__ == '__main__':
-#     dat = DataTiramisu()
-#     # 提取pdf文件中的数据：
-#     data_dict = {
-#         "read_file_pdf":'../data_files/pdf/1.pdf',   #读取文件路径
-#         "new_pdf_file_path":'../data_files/pdf/new_1.pdf',  #读取单个pdf才使用到
-#         "save_img_path":'../static/', #存放要提取数据图片
-#         "save_txt_path":'../txts/save_pdf_txt/pdf.txt', #存放提取后的文本存放地址
-#         "start_num":0, #单个pdf使用：开始
-#         "end_num":3, #单个pdf使用：结束
-#         "if_all":False #True读取文件夹中所有数据，False读取单个
-#     }
-#     dat.post_pdf_txt(data_dict)
 
 

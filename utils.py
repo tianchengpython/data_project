@@ -32,47 +32,36 @@ class DataTiramisu():
     #         是否将文件
             read_file_word = dat_dict['read_file_word']
             save_file_word = dat_dict['save_file_word']
-            start_num = dat_dict['start_num']
-            end_num = dat_dict['end_num']
             if_all = dat_dict['if_all']
 
 
             # 等于True的情况下获取文件夹中的所有word文档，进行提取数据：
             if if_all == "True":
+                # 定义正则表达式模式，用于匹配需要去除的字符
+                pattern = r'[\“\”\.）’\.)\s<>(\-\—\,\，\!\?\"\'\、\=]+'
+                # 定义正则表达式模式，用于匹配每行开头的大小写数字
+                digit_pattern = r'^[A-Za-z0-9]+\s*'
+
                 dat_list = os.listdir(read_file_word)
                 for i in dat_list:
                     doc = docx.Document(f"{read_file_word}{i}")
 
                     for j in doc.paragraphs:
-                        sentences = re.split(r'(?<=。)', j.text)
-                        with open(save_file_word,'a+',encoding='utf-8') as file:
-                            for sentence in sentences:
-                                # 去除句子两端的空白字符
-                                clean_sentence = sentence.strip()
-                                # 过滤掉除句号之外的其他换行符
-                                clean_sentence = re.sub(r'[\r\n]+(?<!。)', '', clean_sentence)
-                                # 如果句子不为空，则写入文件
-                                if clean_sentence:
-                                    file.write(clean_sentence + '\n')
-
-            else:
-                # 获取所有数据跑的相当快，根据段落进行获取数据就没有必要，留一个接口以防后续使用：
-                # 读取word中的数据：
-                doc = docx.Document(read_file_word)
-                # 获取每一给word文件中的所有数据，可以指定几页：
-                data_list = [i for i in doc.paragraphs][int(start_num):int(end_num)]
-                for i in data_list:
-                    with open(f"{save_file_word}",'a+',encoding='utf-8') as file:
-                        sentences = re.split(r'(?<=。)', i.text)
-                        for sentence in sentences:
+                        with open(save_file_word, 'a+', encoding='utf-8') as file:
+                            # 使用正则表达式去除特定字符
+                            clean_line = re.sub(pattern, '', j.text.strip())
+                            # 使用正则表达式去除每行开头的大小写数字
+                            clean_line = re.sub(digit_pattern, '', clean_line)
                             # 去除句子两端的空白字符
-                            clean_sentence = sentence.strip()
-                            # 过滤掉除句号之外的其他换行符
-                            clean_sentence = re.sub(r'[\r\n]+(?<!。)', '', clean_sentence)
-                            # 如果句子不为空，则写入文件
-                            if clean_sentence:
-                                file.write(clean_sentence + '\n')
-
+                            clean_line = clean_line.strip()
+                            # 如果处理后的行非空，则写入文件
+                            if clean_line:
+                                # 在句子末尾添加句号和换行符
+                                for i in clean_line.split("。"):
+                                    # 将 .213. 这种数据过滤掉 和 4)这样的数据
+                                    clean_string = re.sub(r'·\d+·|\d+\)', '', i)
+                                    if i != "":
+                                        file.write(clean_string + '。 \n')
 
             # 记录程序结束时间
             end_time = time.time()
@@ -94,14 +83,12 @@ class DataTiramisu():
         start_num =dat['start_num']
         end_num =dat['end_num']
         if_all = dat['if_all']
-        # print(if_all,type(if_all))
 
         print(">>>>>>开始提取pdf中的数据")
         # 记录程序开始时间
         start_time = time.time()
 
         # 读取文件夹下所有的pdf文件进行提取数据：
-
 
         # 使用Tesseract OCR提取图片中的文字
         pytesseract.pytesseract.tesseract_cmd = self.Tesseract
@@ -157,17 +144,25 @@ class DataTiramisu():
                 # # 使用Tesseract OCR识别图片中的文字
                 text = pytesseract.image_to_string(image, lang=supported_languages[0])
 
-                with open(f"{save_txt_path}",'a+',encoding='utf-8') as file:
-                    # file.write(text)
-                    sentences = re.split(r'(?<=。)', text)
-                    for sentence in sentences:
-                        # 去除句子两端的空白字符
-                        clean_sentence = sentence.strip()
-                        # 过滤掉除句号之外的其他换行符
-                        clean_sentence = re.sub(r'[\r\n]+(?<!。)', '', clean_sentence)
-                        # 如果句子不为空，则写入文件
-                        if clean_sentence:
-                            file.write(clean_sentence + '\n')
+                # 定义正则表达式模式，用于匹配需要去除的字符
+                pattern = r'[\“\”\.）’\.)\s<>(\-\—\,\，\!\?\"\'\、\=]+'
+                # 定义正则表达式模式，用于匹配每行开头的大小写数字
+                digit_pattern = r'^[A-Za-z0-9]+\s*'
+
+                with open(f"{save_txt_path}", 'a+', encoding='utf-8') as file:
+                    # 使用正则表达式去除特定字符
+                    clean_line = re.sub(pattern, '', text.strip())
+                    # 使用正则表达式去除每行开头的大小写数字
+                    clean_line = re.sub(digit_pattern, '', clean_line)
+                    # 去除句子两端的空白字符
+                    clean_line = clean_line.strip()
+                    # 如果处理后的行非空，则写入文件
+                    if clean_line:
+                        # 在句子末尾添加句号和换行符
+                        for i in clean_line.split("。"):
+                            clean_string = re.sub(r'·\d+·|\d+\)', '', i)
+                            if i != "":
+                                file.write(clean_string + '。 \n')
 
             print(">>>>>>提取pdf数据完成\n\n")
 
@@ -192,7 +187,6 @@ class DataTiramisu():
 
 
 
-
 if __name__ == '__main__':
     dat = DataTiramisu()
     # 提取pdf文件中的数据：
@@ -206,19 +200,3 @@ if __name__ == '__main__':
     #     "if_all":False #True读取文件夹中所有数据，False读取单个
     # }
     # dat.post_pdf_txt(data_dict)
-
-
-#     提取word中的数据：
-    # dat_dict = {
-    #     "read_file_word":"./data_files/word/插花与花艺设计（第三版）.docx",   #读取文件路径
-    #     "save_file_word":"./txts/save_word_txt/1_word.txt", #存放word提取出来的数据
-    #     "start_num":0, #单个word使用：开始
-    #     "end_num":30,#单个word使用：结束
-    #     "if_all":False #True读取文件夹中所有数据，False读取单个
-    # }
-    # dat.post_word_txt(dat_dict)
-
-
-    # 读取文本：
-    # resp_txt = dat.get_data_txt("./txts/save_pdf_txt/pdf.txt")
-    # print(resp_txt)
