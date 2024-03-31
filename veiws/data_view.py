@@ -3,7 +3,7 @@
 import os
 import json
 from utils import DataTiramisu
-from models.db_model import insert_data,select_data
+# from models.db_model import insert_data,select_data
 
 class DataView(DataTiramisu):
     # 提取pdf中的数据：
