@@ -1,5 +1,6 @@
 # 工具库
 import PyPDF2
+import pdfplumber
 from pdf2image import convert_from_path
 from PIL import Image
 import pytesseract
@@ -140,25 +141,16 @@ class DataTiramisu():
                 # # 使用Tesseract OCR识别图片中的文字
                 text = pytesseract.image_to_string(image, lang=supported_languages[0])
 
-                # 定义正则表达式模式，用于匹配需要去除的字符
-                pattern = r'[\“\”\.）’\.)\s<>(\-\—\,\，\!\?\"\'\、\=\．]+'
-                # 定义正则表达式模式，用于匹配每行开头的大小写数字
-                digit_pattern = r'^[A-Za-z0-9]+\s*'
-
                 with open(f"{save_txt_path}", 'a+', encoding='utf-8') as file:
-                    # 使用正则表达式去除特定字符
-                    clean_line = re.sub(pattern, '', text.strip())
-                    # 使用正则表达式去除每行开头的大小写数字
-                    clean_line = re.sub(digit_pattern, '', clean_line)
-                    # 去除句子两端的空白字符
-                    clean_line = clean_line.strip()
-                    # 如果处理后的行非空，则写入文件
-                    if clean_line:
-                        # 在句子末尾添加句号和换行符
-                        for i in clean_line.split("。"):
-                            clean_string = re.sub(r'·\d+·|\d+\)|\(\d+|\(\d+\)|\d+\. |\d+.', '', i)
-                            if i != "":
-                                file.write(clean_string + '。 \n')
+                    # 使用正则表达式匹配文本中的中文字符、逗号和句号
+                    chinese_text_with_punctuation = re.findall(r'[\u4e00-\u9fff，。]+', text)
+                    # 将提取到的中文文字、逗号和句号连接成一个字符串
+                    extracted_text = ''.join(chinese_text_with_punctuation)
+                    for i in extracted_text.split("。"):
+                        # 去除每行中指定的数据
+                        # 替换每行中的 |
+                        clean_string = i.replace("|", "").replace("一", "").replace(' ','').replace("\t",'')
+                        file.write(clean_string +"。\n")
 
             print(">>>>>>提取pdf数据完成\n\n")
 
@@ -181,10 +173,20 @@ class DataTiramisu():
             print(">>>>>>读取图片文件失败！",e)
 
 
-
+#     提取不是扫描的pdf文件：
+#     def pdf_characters_txt(self):
+#         with pdfplumber.open("./data_files/pdf/山水之境中国文化中的风景园林.pdf") as pdf:
+#             text = ''
+#             for page in pdf.pages:
+#                 # print(page)
+#                 print(dir(page))
+#                 text += page.extract_text()
+#             print(">>>>>>>>>>",text)
+#         return text
 
 if __name__ == '__main__':
     dat = DataTiramisu()
+    # dat.pdf_characters_txt()
     # 提取pdf文件中的数据：
     # data_dict = {
     #     "read_file_pdf":"./data_files/pdf/1.pdf",   #读取文件路径
