@@ -1,4 +1,5 @@
 # 工具库
+# 推送地址：https://github.com/tianchengpython/data_project.git
 import PyPDF2
 import pdfplumber
 from pdf2image import convert_from_path
@@ -9,6 +10,8 @@ import time
 import docx
 import random
 import re
+
+# linux版Tesseract:https://cloud.tencent.com/developer/article/1343056#:~:text=%E4%B8%BB%E6%B5%81%E7%9A%84%20Linux%20%E5%8F%91%E8%A1%8C%E7%89%88%E9%83%BD%E5%8F%AF%E4%BB%A5%E9%80%9A%E8%BF%87%20%E5%8C%85%E7%AE%A1%E7%90%86%E5%99%A8%20%E6%9D%A5%E5%AE%89%E8%A3%85%20Tesseract%EF%BC%8C%E4%BB%A5%20Debian%20%E5%8F%8A%E5%85%B6%E8%A1%8D%E7%94%9F%E7%89%88%E4%B8%BA%E4%BE%8B%3A,install%20tesseract%20-ocr%20-eng%20tesseract%20-ocr%20-chi%20-sim
 
 # 支持word,txt,pdf,提取文字的封装:
 class DataTiramisu():

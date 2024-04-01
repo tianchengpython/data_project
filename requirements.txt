@@ -1,10 +1,9 @@
-推送地址：https://github.com/tianchengpython/data_project.git
-
-包库
 PyPDF2
 pdf2image
 pytesseract
 docx
+apscheduler
+flask
 
 
 
