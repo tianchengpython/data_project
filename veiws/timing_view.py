@@ -25,7 +25,7 @@ def my_job():
 
 
 # 指定周期写法
-scheduler.add_job(my_job,'cron',hour=9, minute=0,id="my_job")
+scheduler.add_job(my_job,'cron',hour=9, minute=12,id="my_job")
 
 # 启动调度器
 scheduler.start()
@@ -33,7 +33,7 @@ scheduler.start()
 def stop_job():
     scheduler.remove_job("my_job")
     print("》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》定时任务已停止！")
-scheduler.add_job(stop_job, 'cron',hour=9, minute=1)
+scheduler.add_job(stop_job, 'cron',hour=9, minute=13)
 
 
 
