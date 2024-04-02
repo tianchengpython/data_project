@@ -68,7 +68,7 @@
 
 
 
-import re
+# import re
 
 
 
@@ -88,17 +88,18 @@ import re
 #     return extracted_text
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
     # filename = "../txts/save_word_txt/ce.txt"
     # extract_chinese_text_with_punctuation(filename)
 
 
-    txt_data = "1.我国\t是严重|的缺①水国家，尤 其北方地区，如 能在风 景园林绿地排  水的处 理方面采取一些行之有效的办法，对保护水一一一一资源具有一一非常重要一一的意义。"
-    chinese_text_with_punctuation = re.findall(r'[\u4e00-\u9fff，。]+', txt_data)
-    extracted_text = ''.join(chinese_text_with_punctuation)
-    print(extracted_text)
-    # clean_string = re.sub(r"\d+\.", '', extracted_text)
-    if ' ' in txt_data:
-        a=extracted_text.replace("|", "").replace("一", "").replace(' ','').replace("\t",'')
+    # txt_data = "1.我国\t是严重|的缺①水国家，尤 其北方地区，如 能在风 景园林绿地排  水的处 理方面采取一些行之有效的办法，对保护水一一一一资源具有一一非常重要一一的意义。"
+    # chinese_text_with_punctuation = re.findall(r'[\u4e00-\u9fff，。]+', txt_data)
+    # extracted_text = ''.join(chinese_text_with_punctuation)
+    # print(extracted_text)
+    # # clean_string = re.sub(r"\d+\.", '', extracted_text)
+    # if ' ' in txt_data:
+    #     a=extracted_text.replace("|", "").replace("一", "").replace(' ','').replace("\t",'')
+    #
+    #     print(a)
 
-        print(a)
