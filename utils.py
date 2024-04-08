@@ -1,6 +1,5 @@
 # 工具库
 import PyPDF2
-import pdfplumber
 from pdf2image import convert_from_path
 from PIL import Image
 import pytesseract
@@ -9,7 +8,7 @@ import time
 import docx
 import random
 import re
-
+import json
 # 支持word,txt,pdf,提取文字的封装:
 class DataTiramisu():
 
@@ -140,16 +139,19 @@ class DataTiramisu():
                 image = Image.open(f"{save_img_path}{filename}")
                 # # 使用Tesseract OCR识别图片中的文字
                 text = pytesseract.image_to_string(image, lang=supported_languages[0])
-
+                # print(text)
                 with open(f"{save_txt_path}", 'a+', encoding='utf-8') as file:
                     # 使用正则表达式匹配文本中的中文字符、逗号和句号
-                    chinese_text_with_punctuation = re.findall(r'[\u4e00-\u9fff，。]+', text)
+                    chinese_text_with_punctuation = re.findall(r'[\u4e00-\u9fff,。]+', text)
                     # 将提取到的中文文字、逗号和句号连接成一个字符串
                     extracted_text = ''.join(chinese_text_with_punctuation)
+
+                    # print(">>>>>>获取出的文字查看是否有逗号",extracted_text)
+
                     for i in extracted_text.split("。"):
                         # 去除每行中指定的数据
                         # 替换每行中的 |
-                        clean_string = i.replace("|", "").replace("丨", "").replace("一", "").replace(' ','').replace("\t",'')
+                        clean_string = i.replace("|", "").replace(",","，").replace("丨", "").replace("一", "").replace(' ','').replace("\t",'')
                         file.write(clean_string +"。\n")
 
             print(">>>>>>提取pdf数据完成\n\n")
@@ -173,19 +175,53 @@ class DataTiramisu():
             print(">>>>>>读取图片文件失败！",e)
 
 
-#     提取不是扫描的pdf文件：
-#     def pdf_characters_txt(self):
-#         with pdfplumber.open("./data_files/pdf/山水之境中国文化中的风景园林.pdf") as pdf:
-#             text = ''
-#             for page in pdf.pages:
-#                 # print(page)
-#                 print(dir(page))
-#                 text += page.extract_text()
-#             print(">>>>>>>>>>",text)
-#         return text
+#    获取出来的数据与当前数据对比，为了解决重复率过高：
+    def de_weight(self,run_data_path:str,save_data_path:str):
+        try:
+            save_data_list = []
+            with open(f"{save_data_path}",'r',encoding='utf-8') as f:
+                save_content = f.read()
+            for i in eval(save_content):
+                save_data_list.append(i['output'])
+
+            run_data_list = []
+            with open(f"{run_data_path}",'r',encoding='utf-8') as fz:
+                run_content = fz.read()
+            for j in eval(run_content):
+                run_data_list.append(j['output'])
+
+            num = 0
+            pal_list = []
+#             循环已保存的数据，将跑出来的数据比保存过的数据进行对比，要求跑出来的数据题目不能相同，问题也不能和已有的数据相同，若重复就不追加
+            for run_i in run_data_list:
+                if run_i not in save_data_list:
+                    num += 1
+                    key_name = ""
+                    for run_j in eval(run_content):
+                        if run_i == run_j['output']:
+                            key_name = run_j['instruction']
+            #         进行拼接数据:
+                    pal_list.append({"instruction": key_name,"input": "","output": run_i})
+
+            save_data = eval(save_content)
+            save_data.extend(pal_list)
+            data_str = json.dumps(save_data,indent=5).encode('utf-8').decode('unicode_escape')
+#             将数据保存到指定文件中：
+            with open(save_data_path,'w',encoding='utf-8')as save_f:
+                save_f.write(data_str)
+
+            print(f">>>>>>去重拼接数据成功,已新增{num}条数据")
+        except Exception as e:
+            print(">>>>>>去重拼接数据异常！",e)
+
 
 if __name__ == '__main__':
     dat = DataTiramisu()
+    save_data_path = "./data_json正式数据/数据集/园林工程施工与管理.json"
+    run_data_path = "./data_json正式数据/joint.json"
+    dat.de_weight(run_data_path,save_data_path)
+
+
     # dat.pdf_characters_txt()
     # 提取pdf文件中的数据：
     # data_dict = {

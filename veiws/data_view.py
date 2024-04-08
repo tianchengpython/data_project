@@ -66,18 +66,27 @@ class DataView(DataTiramisu):
                 json.dump(pal,file,ensure_ascii=False,indent=4)
 
 
+#     进行去重拼接数据：
+    def de_weight_json(self):
+#         输入保存过的数据集：
+        save_data_input= input("请输入已保存数据集的路径：")
+        # ../data_json正式数据/数据集/园林工程从新手到高手系列.json
+        run_data_input= input("请输入新跑出来的数据集路径：")
+        # ../data_json正式数据/joint.json
+        self.de_weight(run_data_input,save_data_input)
+
 
 if __name__ == '__main__':
     dat = DataView()
 
     # 提取pdf中的数据：
-    procedure = input(">>>>>>请输入程序选项：\n1提取pdf中书本数据:\n2提取word中书本数据：\n3读取要提问的问题：")
+    procedure = input(">>>>>>请输入程序选项：\n1提取pdf中书本数据:\n2提取word中书本数据：\n3读取要提问的问题：\n4数据集去重：")
 
     if procedure == "1":
         dat.get_pdf_data()
-    if procedure == "2":
+    elif procedure == "2":
         dat.get_world_data()
     elif procedure == "3":
         dat.transition()
-
-
+    elif procedure == "4":
+        dat.de_weight_json()

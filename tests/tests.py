@@ -68,7 +68,7 @@
 
 
 
-# import re
+import re
 
 
 
@@ -88,12 +88,12 @@
 #     return extracted_text
 
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
     # filename = "../txts/save_word_txt/ce.txt"
     # extract_chinese_text_with_punctuation(filename)
 
 
-    # txt_data = "1.我国\t是严重|的缺①水国家，尤 其北方地区，如 能在风 景园林绿地排  水的处 理方面采取一些行之有效的办法，对保护水一一一一资源具有一一非常重要一一的意义。"
+    # txt_data = "1. 我国\t是严重|的缺①水国家，尤 其北方地区，如 能在风 景园林绿地排  水的处 理方面采取一些行之有效的办法，对保护水一一一一资源具有一一非常重要一一的意义。"
     # chinese_text_with_punctuation = re.findall(r'[\u4e00-\u9fff，。]+', txt_data)
     # extracted_text = ''.join(chinese_text_with_punctuation)
     # print(extracted_text)
@@ -102,4 +102,23 @@
     #     a=extracted_text.replace("|", "").replace("一", "").replace(' ','').replace("\t",'')
     #
     #     print(a)
+    # with open("../txts/save_pdf_txt/园林塑石假山设计.txt",'r',encoding='utf-8') as f:
+    #     text = f.read()
+    #
+    # save_txt_path = "../txts/save_pdf_txt/园林塑石假山设计2.txt"
+    # with open(f"{save_txt_path}", 'a+', encoding='utf-8') as file:
+    #     # 使用正则表达式匹配文本中的中文字符、逗号和句号
+    #     chinese_text_with_punctuation = re.findall(r'[\u4e00-\u9fff，。]+', text)
+    #     # 将提取到的中文文字、逗号和句号连接成一个字符串
+    #     extracted_text = ''.join(chinese_text_with_punctuation)
+    #     for i in extracted_text.split("。"):
+    #         # 去除每行中指定的数据
+    #         # 替换每行中的 |
+    #         clean_string = i.replace("|", "").replace("丨", "").replace("一", "").replace(' ', '').replace("\t", '')
+    #         file.write(clean_string + "。\n")
+
+    txt_data = "园林工程竣工验收项目较多，需要时间长，要根据工程的规模合理选择验收程序和方法"
+    if txt_data[-1] != "。":
+        txt_data = txt_data +"。"
+    print(txt_data)
 
