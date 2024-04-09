@@ -20,31 +20,20 @@ scheduler = BackgroundScheduler()
 
 
 # 定义一个定时任务
-def my_job():
-    print("》》》》》》》》》》》》》》》》》》》》》》》》》》》》》定时任务执行！")
-
-
-# 指定周期写法
-scheduler.add_job(my_job,'cron',hour=9, minute=12,id="my_job")
-
-# 启动调度器
-scheduler.start()
-# 定义一个停止任务的函数
-def stop_job():
-    scheduler.remove_job("my_job")
-    print("》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》定时任务已停止！")
-scheduler.add_job(stop_job, 'cron',hour=9, minute=13)
-
-
-
-
-
-
-
-
-
-
-
+# def my_job():
+#     print("》》》》》》》》》》》》》》》》》》》》》》》》》》》》》定时任务执行！")
+#
+#
+# # 指定周期写法
+# scheduler.add_job(my_job,'cron',hour=9, minute=12,id="my_job")
+#
+# # 启动调度器
+# scheduler.start()
+# # 定义一个停止任务的函数
+# def stop_job():
+#     scheduler.remove_job("my_job")
+#     print("》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》》定时任务已停止！")
+# scheduler.add_job(stop_job, 'cron',hour=9, minute=13)
 
 
 

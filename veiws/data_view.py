@@ -45,32 +45,35 @@ class DataView(DataTiramisu):
 
     # 将文本中的每一行数据添加到列表中用于进行整理JSON数据使用：
     def transition(self):
+        # 去重问题，使用集合：
+        set_data = set()
         transition_list = []
-    #     读取txt文件：
-        read_path= "../txts/save_json/问题1.txt"
-        save_path= "../txts/save_json/问题1.json"
+        #     读取txt文件：
+        read_path = "../txts/save_json/问题1.txt"
+        save_path = "../txts/save_json/问题1.json"
+        with open(read_path, 'r', encoding='utf-8') as f:
+            for i in f.readlines():
+                set_data.add(i.strip())
+        #     使用集合推导式
+        {transition_list.append(i) for i in set_data}
         pal = {
             "text": transition_list
         }
-        with open(read_path,'r',encoding='utf-8') as f:
-            for i in f.readlines():
-                transition_list.append(i.strip())
-
-    #     转换为JSON提问格式数据：
+        #     转换为JSON提问格式数据：
         if not os.path.exists(save_path):
-    #             存入Json文件中
-            with open(save_path,'w',encoding='utf-8') as file:
-                json.dump(pal,file,ensure_ascii=False,indent=4)
+            #             存入Json文件中
+            with open(save_path, 'w', encoding='utf-8') as file:
+                json.dump(pal, file, ensure_ascii=False, indent=4)
         else:
-            with open(save_path,'a',encoding='utf-8') as file:
-                json.dump(pal,file,ensure_ascii=False,indent=4)
+            with open(save_path, 'a', encoding='utf-8') as file:
+                json.dump(pal, file, ensure_ascii=False, indent=4)
 
 
 #     进行去重拼接数据：
     def de_weight_json(self):
 #         输入保存过的数据集：
         save_data_input= input("请输入已保存数据集的路径：")
-        # ../data_json正式数据/数据集/园林工程从新手到高手系列.json
+        # "../data_json正式数据/数据集/园林工程施工组织与管理.json"
         run_data_input= input("请输入新跑出来的数据集路径：")
         # ../data_json正式数据/joint.json
         self.de_weight(run_data_input,save_data_input)

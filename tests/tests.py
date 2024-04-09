@@ -121,4 +121,3 @@ if __name__ == '__main__':
     if txt_data[-1] != "。":
         txt_data = txt_data +"。"
     print(txt_data)
-

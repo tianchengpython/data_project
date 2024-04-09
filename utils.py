@@ -9,6 +9,7 @@ import docx
 import random
 import re
 import json
+
 # 支持word,txt,pdf,提取文字的封装:
 class DataTiramisu():
 
@@ -179,34 +180,35 @@ class DataTiramisu():
     def de_weight(self,run_data_path:str,save_data_path:str):
         try:
             save_data_list = []
+            t_data_list = []
+            v_data_list= []
+            num = 0
             with open(f"{save_data_path}",'r',encoding='utf-8') as f:
                 save_content = f.read()
-            for i in eval(save_content):
-                save_data_list.append(i['output'])
+                for i in eval(save_content):
+                    t_data_list.append(i['instruction'])
+                    v_data_list.append(i['output'])
 
-            run_data_list = []
             with open(f"{run_data_path}",'r',encoding='utf-8') as fz:
                 run_content = fz.read()
-            for j in eval(run_content):
-                run_data_list.append(j['output'])
+                for j in eval(run_content):
+                    # 只有提示句和答案都不在存放的列表中才进行同时添加数据
+                    if j['instruction'] not in t_data_list and j['output'] not in v_data_list:
+                        t_data_list.append(j['instruction'])
+                        v_data_list.append(j['output'])
+                        num += 1
 
-            num = 0
-            pal_list = []
-#             循环已保存的数据，将跑出来的数据比保存过的数据进行对比，要求跑出来的数据题目不能相同，问题也不能和已有的数据相同，若重复就不追加
-            for run_i in run_data_list:
-                if run_i not in save_data_list:
-                    num += 1
-                    key_name = ""
-                    for run_j in eval(run_content):
-                        if run_i == run_j['output']:
-                            key_name = run_j['instruction']
-            #         进行拼接数据:
-                    pal_list.append({"instruction": key_name,"input": "","output": run_i})
+            # 进行拼接数据
+            for key,value in zip(t_data_list,v_data_list):
+                pal ={
+                        "instruction": key,
+                        "input": "",
+                        "output": value
+                    }
+                save_data_list.append(pal)
 
-            save_data = eval(save_content)
-            save_data.extend(pal_list)
-            data_str = json.dumps(save_data,indent=5).encode('utf-8').decode('unicode_escape')
-#             将数据保存到指定文件中：
+            data_str = json.dumps(save_data_list,indent=5).encode('utf-8').decode('unicode_escape')
+#                         将数据保存到指定文件中：
             with open(save_data_path,'w',encoding='utf-8')as save_f:
                 save_f.write(data_str)
 
@@ -217,7 +219,7 @@ class DataTiramisu():
 
 if __name__ == '__main__':
     dat = DataTiramisu()
-    save_data_path = "./data_json正式数据/数据集/园林工程施工与管理.json"
+    save_data_path = "./data_json正式数据/数据集/园林工程施工组织与管理.json"
     run_data_path = "./data_json正式数据/joint.json"
     dat.de_weight(run_data_path,save_data_path)
 
